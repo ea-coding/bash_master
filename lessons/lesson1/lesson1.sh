@@ -10,6 +10,13 @@ check_command() {
     echo "Well done!"
 }
 
+print_and_wait() {
+    local time="$1"
+    local statement="$2"
+    echo "$statement"
+    sleep "$time"
+}
+
 # Welcome message
 read -p "Please enter your name: " name
 echo "Hello $name! Welcome to Bash Master!"
@@ -72,7 +79,7 @@ sleep 2
 echo "As the name suggests, it prints the current working directory."
 sleep 2
 read -p "Type the 'pwd' command: " pwd_command
-check_command "pwd" "$pwd_command"
+check_command "$pwd_command" "pwd"
 while [[ "$pwd_command" != "pwd" ]]; do
     read -p "Oops. This is not the pwd command. Try again: " pwd_command
 done
@@ -93,16 +100,51 @@ echo "There is another command that will help us do that."
 sleep 2
 echo "It is the 'cd' command. cd stands for... change directory (another cool abbreviaton)."
 sleep 2
-echo "To get to the directory from which the current program is running, type the folowing command:"
+echo "We can use it by putting the name of the destination directory right after it. Example: cd my_dir"
+sleep 2
+#echo "To get to the directory from which the current program is running, type the folowing command:"
 script_directory=$(dirname "$0")
-cd_command1="cd $script_directory"
-echo "$cd_command1"
+cd "$script_directory"
+cd ..
+echo "Check our current working directory with a previously learned command."
 sleep 2
-read -p "Type the command here: " cd_command1_input
+read -p "Type it here: " cd_command_input1
+check_command "$cd_command_input1" "pwd"
+pwd
 sleep 2
-check_command "$cd_command1_input" "$cd_command1"
+read -p "Now, change the directory to be lesson1: " cd_command_input2
+check_command "$cd_command_input2" "cd lesson1"
+cd lesson1
 sleep 2
-echo "Now we are in the directory lesson1!"
+read -p "Now, check the current directory again: " cd_command_input3
+check_command "$cd_command_input3" "pwd"
+pwd
+echo "Congratulations, you have succesfully switched into the directory of lesson1."
+sleep 2
+echo "Now it's time to switch back to the directory before it."
+sleep 2
+print_and_wait 2 "To do so, we are going to use a neat little trick."
+print_and_wait 2 "Each directory contains two other directories by default."
+print_and_wait 2 "It contains a representation of itself, a directory called '.'"
+print_and_wait 2 "It contains a representation of the directory abvoe it, called '..'"
+print_and_wait 2 "If we want to access the directory right before the current one..."
+print_and_wait 2 "we can simply call 'cd ..', just like with any other directory."
+read -p "Try it out: " cd_command_input4
+check_command "$cd_command_input4" "cd .."
+cd ..
+read -p "Now print the current working directory again: " cd_command_input5
+check_command "$cd_command_input5" "pwd"
+pwd
+
+# cd_command1="cd $script_directory"
+
+# echo "$cd_command1"
+# sleep 2
+# read -p "Type the command here: " cd_command1_input
+# sleep 2
+# check_command "$cd_command1_input" "$cd_command1"
+# sleep 2
+# echo "Now we are in the directory of lesson1! Great job!"
 
 
 
