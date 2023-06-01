@@ -122,7 +122,28 @@ cd_tutorial() {
     read -p "Now print the current working directory again: " cd_command_input5
     check_command "$cd_command_input5" "pwd"
     pwd
+    print_and_wait 2 "Great! Now, we know how to change directories!"
+    echo
 }
+
+
+ls_tutorial() {
+    print_and_wait 2 "What if we don't know which directories we can change to from our current working directory?"
+    print_and_wait 2 "For this to work, we need to know which directories are inside our current working directory."
+    print_and_wait 2 "There is a useful command to do this: the 'ls' command (this stands for list)"
+    print_and_wait 2 "The 'ls' command lists the files and directories in the current working directory."
+    script_directory=$(dirname "$0")
+    cd "$script_directory"
+    read -p "Check the current working directory: " ls_input1
+    check_command "$ls_input1" "pwd"
+    pwd
+    read -p "Now, list the files inside the current working directory: " ls_input2
+    check_command "$ls_input2" "ls"
+    ls
+    print_and_wait 2 "Great, now we can see the files in the current directory!"
+}
+
+
 
 print_challenge() {
     # Lesson 1 Challenge
@@ -138,6 +159,7 @@ full_tutorial() {
     print_logistics
     pwd_tutorial
     cd_tutorial
+    ls_tutorial
     print_challenge
 } 
 
@@ -154,6 +176,9 @@ else
     elif [ "$first_arg" == "-cd" ]
     then
         cd_tutorial
+    elif [ "$first_arg" == "-ls" ]
+    then
+        ls_tutorial
     elif [ "$first_arg" == "-challenge" ]
     then
         print_challenge
@@ -162,13 +187,6 @@ else
     fi
 fi
 
-
-
-# do pwd to see how directory changes as we traverse
-
-# cd in absolute paths 
-# cd one directory relative
-# do cd ..
 
 
 
