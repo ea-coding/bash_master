@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/local/bin/bash
 
 # Checks whether given command is what we expected
 check_command() {
@@ -197,29 +197,56 @@ full_tutorial() {
 
 argc=$#
 
-if [ $argc -eq 0 ]
+declare -A key_to_function
+key_to_function[0]="pwd_tutorial"
+key_to_function[1]="cd_tutorial"
+key_to_function[2]="ls_tutorial"
+key_to_function[3]="flags_tutorial"
+key_to_function[10]="print_challenge"
+
+declare -A command_to_key
+command_to_key["-pwd"]=0
+command_to_key["-cd"]=1
+command_to_key["-ls"]=2
+command_to_key["-flags"]=3
+command_to_key["-challenge"]=10
+
+# Check bash version
+echo "$BASH_VERSION"
+
+if [ $argc -gt 10 ]
+then
+    echo "Number of command line arguments is too large (must be less than 9)."
+
+elif [ $argc -eq 0 ]
 then 
     full_tutorial
 else
-    first_arg=$1
-    if [ "$first_arg" == "-pwd" ] 
-    then
-        pwd_tutorial
-    elif [ "$first_arg" == "-cd" ]
-    then
-        cd_tutorial
-    elif [ "$first_arg" == "-ls" ]
-    then
-        ls_tutorial
-    elif [ "$first_arg" == "-flags"]
-    then
-        flags_tutorial
-    elif [ "$first_arg" == "-challenge" ]
-    then
-        print_challenge
-    else
-        print_valid_flag_error
-    fi
+
+    # Use associative array as set
+    declare -A seen_set
+
+    for input in "$@"
+    do
+        # is valid input
+        if [[ ${command_to_key[$input]+_} ]]
+        then
+            # command does not already exist
+            new_key=${command_to_key["$input"]}
+            if [[ ! ${seen_set[$new_key]} ]]
+            then
+                echo "adding $input to to seen yet"
+                seen_set[$new_key]=1
+            fi
+        fi
+    done
+
+    sorted_keys=($(echo "${!seen_set[@]}" | tr ' ' '\n' | sort -n))
+
+    for key in "${sorted_keys[@]}"
+    do
+        eval "${key_to_function[$key]}"
+    done
 fi
 
 
