@@ -19,7 +19,7 @@ print_and_wait() {
 
 print_valid_flag_error() {
     echo "Please provide a valid flag."
-    echo "Valid flags are: -pwd, -cd, -challenge"
+    echo "Valid flags are: -pwd, -cd, -ls, -flags, -challenge"
 }
 
 # Prints welcome message
@@ -132,6 +132,7 @@ ls_tutorial() {
     print_and_wait 2 "For this to work, we need to know which directories are inside our current working directory."
     print_and_wait 2 "There is a useful command to do this: the 'ls' command (this stands for list)"
     print_and_wait 2 "The 'ls' command lists the files and directories in the current working directory."
+    # Enote: Currently bug here
     script_directory=$(dirname "$0")
     cd "$script_directory"
     read -p "Check the current working directory: " ls_input1
@@ -141,6 +142,36 @@ ls_tutorial() {
     check_command "$ls_input2" "ls"
     ls
     print_and_wait 2 "Great, now we can see the files in the current directory!"
+    print_and_wait 2 "We see that we have a file called lesson1.sh and a file challenge1.sh"
+    print_and_wait 2 "We also have a direcotry called interesting_dir"
+    print_and_wait 2 "Now change the directory to interesting_dir"
+    read -p "Type the command here: " ls_input3
+    check_command "$ls_input3" "cd interesting_dir"
+    cd interesting_dir
+    read -p "Check your current working directory: " ls_input4
+    check_command "$ls_input4" "pwd"
+    pwd
+    read -p "Now list the contents of this directory: " ls_input5
+    check_command "$ls_inoput5" "ls"
+    ls
+    print_and_wait 2 "Amazing! You have learned how the ls command works!"
+    echo
+}
+
+flags_tutorial() {
+    print_and_wait 2 "Let us now learn about flags!"
+    print_and_wait 2 "Flags are options that you can set when executing a command."
+    print_and_wait 2 "To do this use the following syntax: command -flag1 -flag2"
+    print_and_wait 2 "This is very abstract, so let's see a specific example."
+    print_and_wait 2 "Do you remember the 'ls' command?"
+    print_and_wait 2 "Well it turns out that it can do more than you might have initially thought."
+    print_and_wait 2 "Let's explore some of the flags that you can set"
+    print_and_wait 2 "A cool flag that you can use for the ls command is the -l flag."
+    print_and_wait 2 "This lists all files in long format, giving more information about the files."
+    print_and_wait 2 "To look up the flags that you can use with a specific command type 'man command'."
+    read -p "Try it out with the ls command: " flags_input2
+    check_command "$flags_input2" "man ls"
+    man ls
 }
 
 
@@ -160,6 +191,7 @@ full_tutorial() {
     pwd_tutorial
     cd_tutorial
     ls_tutorial
+    flags_tutorial
     print_challenge
 } 
 
@@ -179,6 +211,9 @@ else
     elif [ "$first_arg" == "-ls" ]
     then
         ls_tutorial
+    elif [ "$first_arg" == "-flags"]
+    then
+        flags_tutorial
     elif [ "$first_arg" == "-challenge" ]
     then
         print_challenge
