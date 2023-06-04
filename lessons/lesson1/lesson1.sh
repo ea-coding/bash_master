@@ -10,6 +10,15 @@ check_command() {
     echo "Well done!"
 }
 
+read_and_exec_command() {
+    local expected="$1"
+    local output_message="$2"
+    read -p "$output_message " given
+    check_command "$given" "$expected"
+    echo "Output: "
+    eval "$expected"
+}
+
 print_and_wait() {
     local time="$1"
     local statement="$2"
@@ -20,6 +29,11 @@ print_and_wait() {
 print_valid_flag_error() {
     echo "Please provide a valid flag."
     echo "Valid flags are: -pwd, -cd, -ls, -flags, -challenge"
+}
+
+change_to_lesson1_directory() {
+    script_directory=$(dirname "$0")
+    cd "$script_directory"
 }
 
 # Prints welcome message
@@ -168,10 +182,35 @@ flags_tutorial() {
     print_and_wait 2 "Let's explore some of the flags that you can set"
     print_and_wait 2 "A cool flag that you can use for the ls command is the -l flag."
     print_and_wait 2 "This lists all files in long format, giving more information about the files."
-    print_and_wait 2 "To look up the flags that you can use with a specific command type 'man command'."
-    read -p "Try it out with the ls command: " flags_input2
-    check_command "$flags_input2" "man ls"
-    man ls
+    print_and_wait 2 "Before we see what this looks like, let's print the current working directory."
+    change_to_lesson1_directory
+    read_and_exec_command "pwd" "Enter the appropriate command:"
+    print_and_wait 2 "Great! Now change the directory to interesting_dir"
+    read_and_exec_command "cd interesting_dir" "Enter the appropriate command:"
+    read_and_exec_command "ls -l" "Now try the ls command with the -l flag:"
+    # Enote: Maybe explain output
+    # print_and_wait 2 "The output of this is a little tricky to parse, but let's go through it."
+    print_and_wait 2 "Another amazing flag that we can use the ls command with is the -a flag."
+    print_and_wait 2 "This makes ls show you all files, including hidden files."
+    print_and_wait 2 "What are hidden files, you might ask. Well let's run the ls -a command and find out."
+    read_and_exec_command "ls -a" "Try the ls command with the -a flag:"
+    print_and_wait 2 "Inspect the output. Do you see the .secret_file.txt?"
+    print_and_wait 2 "It turns out that you can create hidden files and directories."
+    print_and_wait 2 "These files start with a . and cannot be viewed directly by users."
+    print_and_wait 2 "Now that we have learned about these two cool flags, let's see how we can combine them."
+    print_and_wait 2 "You can combine flags as follows: command -flag1 -flag2"
+    read_and_exec_command "ls -l -a" "Try it out with 'ls -l -a':"
+    print_and_wait 2 "Another way to combine flags is to simply put the letters after one another."
+    read_and_exec_command "ls -la" "Try this out 'ls -la':"
+    print_and_wait 2 "Amazing! Now we know how to use flags!"
+
+    # ENote: Explain man here?
+    # print_and_wait 2 "To look up the flags that you can use with a specific command type 'man command_name'."
+    # print_and_wait 2 "For example, you can run the command 'man ls'."
+    # print_and_wait 2 "This will show you different flags that you can set."
+    # read -p "Try it out with the ls command: " flags_input2
+    # check_command "$flags_input2" "man ls"
+    # man ls
 }
 
 
@@ -235,7 +274,6 @@ else
             new_key=${command_to_key["$input"]}
             if [[ ! ${seen_set[$new_key]} ]]
             then
-                echo "adding $input to to seen yet"
                 seen_set[$new_key]=1
             fi
         fi
