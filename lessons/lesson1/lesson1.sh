@@ -1,5 +1,11 @@
 #!/usr/local/bin/bash
 
+script_dir="$(dirname "$(readlink -f "$0")")"
+
+change_to_lesson1_directory() {
+    cd "$script_dir"
+}
+
 # Checks whether given command is what we expected
 check_command() {
     local given_input="$1"
@@ -13,9 +19,13 @@ check_command() {
 read_and_exec_command() {
     local expected="$1"
     local output_message="$2"
+    local print_output="$3"
     read -p "$output_message " given
     check_command "$given" "$expected"
-    echo "Output: "
+    if [[ "$print_output" != "false" ]]
+    then
+        echo "Output: "
+    fi
     eval "$expected"
 }
 
@@ -29,11 +39,6 @@ print_and_wait() {
 print_valid_flag_error() {
     echo "Please provide a valid flag."
     echo "Valid flags are: -pwd, -cd, -ls, -flags, -challenge"
-}
-
-change_to_lesson1_directory() {
-    script_directory=$(dirname "$0")
-    cd "$script_directory"
 }
 
 # Prints welcome message
@@ -89,11 +94,8 @@ pwd_tutorial() {
     print_and_wait 2 "Let's start with the 'pwd' command."
     print_and_wait 2 "This command stands for print working directory (a lot of Bash commands are abbreviations)."
     print_and_wait 2 "As the name suggests, it prints the current working directory."
-    read -p "Type the 'pwd' command: " pwd_command
-    check_command "$pwd_command" "pwd"
+    read_and_exec_command "pwd" "Type the 'pwd' command here:"
     pwd_output=$(pwd)
-    sleep 2
-    echo "$pwd_output"
     print_and_wait 2 "We figured out that you are currently in following directory: $pwd_output"
     echo
 }
@@ -106,36 +108,22 @@ cd_tutorial() {
     print_and_wait 2 "It is the 'cd' command. cd stands for... change directory (another cool abbreviaton)."
     print_and_wait 2 "We can use it by putting the name of the destination directory right after it. Example: cd my_dir"
     #echo "To get to the directory from which the current program is running, type the folowing command:"
-    script_directory=$(dirname "$0")
-    cd "$script_directory"
+    change_to_lesson1_directory
     cd ..
     print_and_wait 2 "Check our current working directory with a previously learned command."
-    read -p "Type it here: " cd_command_input1
-    check_command "$cd_command_input1" "pwd"
-    pwd
-    sleep 2
-    read -p "Now, change the directory to be lesson1: " cd_command_input2
-    check_command "$cd_command_input2" "cd lesson1"
-    cd lesson1
-    sleep 2
-    read -p "Now, check the current directory again: " cd_command_input3
-    check_command "$cd_command_input3" "pwd"
-    pwd
+    read_and_exec_command "pwd" "Type the command here:"
+    read_and_exec_command "cd lesson1" "Now, change the directory to be lesson1:" "false"
+    read_and_exec_command "pwd" "Now, print the current working directory again:"
     print_and_wait 2 "Congratulations, you have succesfully switched into the directory of lesson1."
     print_and_wait 2 "Now it's time to switch back to the directory before it."
-    sleep 2
     print_and_wait 2 "To do so, we are going to use a neat little trick."
     print_and_wait 2 "Each directory contains two other directories by default."
     print_and_wait 2 "It contains a representation of itself, a directory called '.'"
     print_and_wait 2 "It contains a representation of the directory abvoe it, called '..'"
     print_and_wait 2 "If we want to access the directory right before the current one..."
     print_and_wait 2 "...we can simply call 'cd ..', just like with any other directory."
-    read -p "Try it out: " cd_command_input4
-    check_command "$cd_command_input4" "cd .."
-    cd ..
-    read -p "Now print the current working directory again: " cd_command_input5
-    check_command "$cd_command_input5" "pwd"
-    pwd
+    read_and_exec_command "cd .." "Try it out:" "false"
+    read_and_exec_command "pwd" "Now print the current working directory again:"
     print_and_wait 2 "Great! Now, we know how to change directories!"
     echo
 }
@@ -147,27 +135,16 @@ ls_tutorial() {
     print_and_wait 2 "There is a useful command to do this: the 'ls' command (this stands for list)"
     print_and_wait 2 "The 'ls' command lists the files and directories in the current working directory."
     # Enote: Currently bug here
-    script_directory=$(dirname "$0")
-    cd "$script_directory"
-    read -p "Check the current working directory: " ls_input1
-    check_command "$ls_input1" "pwd"
-    pwd
-    read -p "Now, list the files inside the current working directory: " ls_input2
-    check_command "$ls_input2" "ls"
-    ls
+    change_to_lesson1_directory
+    read_and_exec_command "pwd" "Print the current working directory:"
+    read_and_exec_command "ls" "Now list the files in the current working directory:"
     print_and_wait 2 "Great, now we can see the files in the current directory!"
     print_and_wait 2 "We see that we have a file called lesson1.sh and a file challenge1.sh"
     print_and_wait 2 "We also have a direcotry called interesting_dir"
     print_and_wait 2 "Now change the directory to interesting_dir"
-    read -p "Type the command here: " ls_input3
-    check_command "$ls_input3" "cd interesting_dir"
-    cd interesting_dir
-    read -p "Check your current working directory: " ls_input4
-    check_command "$ls_input4" "pwd"
-    pwd
-    read -p "Now list the contents of this directory: " ls_input5
-    check_command "$ls_inoput5" "ls"
-    ls
+    read_and_exec_command "cd interesting_dir" "Type the command here:" "false"
+    read_and_exec_command "pwd" "Check your current working directory:"
+    read_and_exec_command "ls" "Now list the contents of this directory:" 
     print_and_wait 2 "Amazing! You have learned how the ls command works!"
     echo
 }
@@ -186,7 +163,7 @@ flags_tutorial() {
     change_to_lesson1_directory
     read_and_exec_command "pwd" "Enter the appropriate command:"
     print_and_wait 2 "Great! Now change the directory to interesting_dir"
-    read_and_exec_command "cd interesting_dir" "Enter the appropriate command:"
+    read_and_exec_command "cd interesting_dir" "Enter the appropriate command:" "false"
     read_and_exec_command "ls -l" "Now try the ls command with the -l flag:"
     # Enote: Maybe explain output
     # print_and_wait 2 "The output of this is a little tricky to parse, but let's go through it."
