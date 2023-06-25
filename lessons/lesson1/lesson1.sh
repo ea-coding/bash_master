@@ -1,5 +1,10 @@
 #!/usr/local/bin/bash
 
+# Lesson 1: Basics
+# General introduction to shell commands and flags.
+# Commands covered: 'pwd', 'ls', 'pwd', 'echo', 'cat'.
+
+
 script_dir="$(dirname "$(readlink -f "$0")")"
 
 change_to_lesson1_directory() {
@@ -71,7 +76,8 @@ print_logistics() {
     print_and_wait 2 "Okay, let's get started!"
     print_and_wait 2 "In this lesson, we will talk about some useful Bash commands to control your machine."
     print_and_wait 2 "In particular, we are going to learn about these powerful commands:"
-    print_and_wait 2 "'pwd', 'ls', 'cd', 'mkdir', 'touch', 'find', 'cp' and 'mv'"
+    print_and_wait 2 "'pwd', 'cd', 'ls', 'echo'"
+    print_and_wait 2 "In addition, we are going to learn about flags!"
     print_and_wait 2 "If you know these commands, feel free to skip to lesson 2."
     echo
 
@@ -91,6 +97,7 @@ print_logistics() {
 
 pwd_tutorial() {
     # Bash pwd
+    change_to_lesson1_directory
     print_and_wait 2 "Let's start with the 'pwd' command."
     print_and_wait 2 "This command stands for print working directory (a lot of Bash commands are abbreviations)."
     print_and_wait 2 "As the name suggests, it prints the current working directory."
@@ -130,12 +137,12 @@ cd_tutorial() {
 
 
 ls_tutorial() {
+    change_to_lesson1_directory
     print_and_wait 2 "What if we don't know which directories we can change to from our current working directory?"
     print_and_wait 2 "For this to work, we need to know which directories are inside our current working directory."
     print_and_wait 2 "There is a useful command to do this: the 'ls' command (this stands for list)"
     print_and_wait 2 "The 'ls' command lists the files and directories in the current working directory."
     # Enote: Currently bug here
-    change_to_lesson1_directory
     read_and_exec_command "pwd" "Print the current working directory:"
     read_and_exec_command "ls" "Now list the files in the current working directory:"
     print_and_wait 2 "Great, now we can see the files in the current directory!"
@@ -190,6 +197,39 @@ flags_tutorial() {
     # man ls
 }
 
+echo_tutorial() {
+    print_and_wait 2 "Let's now learn about another useful command: the 'echo' command."
+    print_and_wait 2 "This command write text to standard output."
+    print_and_wait 2 "You can think of this simply as printing the text that you provide."
+    print_and_wait 2 "So, how does it actually work? Well, you simply write echo and then the text."
+    print_and_wait 2 "For example, we could write 'echo Hello World'."
+    read_and_exec_command "echo Hello World" "Try it out:"
+    print_and_wait 2 "Awesome! Now, we know the echo command!"
+    echo
+}
+
+cat_tutorial() {
+    change_to_lesson1_directory
+    print_and_wait 2 "Let us end this lesson by learning about the 'cat' command."
+    print_and_wait 2 "This command doesn't have anything to do with the pet. It is rather short for concatenate."
+    print_and_wait 2 "The cat commands concatenates the output of different files and prints it."
+    print_and_wait 2 "We use this command by typing 'cat' and then the files that we want to print."
+    print_and_wait 2 "Let's see what files we have in our working directory."
+    read_and_exec_command "ls" "Enter the appropriate command:"
+    print_and_wait 2 "Did you spot the files example_file1.txt and example_file2.txt?"
+    print_and_wait 2 "We can write something like 'cat example_file1.txt' to print the contents of file example_file1.txt."
+    read_and_exec_command "cat example_file1.txt" "Try it out:"
+    print_and_wait 2 "Amazing! But the second half of the poem is missing."
+    print_and_wait 2 "Let's print the entire poem by using cat for both the example_file1.txt and example_file2.txt files."
+    read_and_exec_command "cat example_file1.txt example_file2.txt" "Try it out:"
+    print_and_wait 2 "Awesome! One could say that I'm something of a poet myself."
+    print_and_wait 2 "We can use flags for the 'cat' command as well."
+    print_and_wait 2 "When we use the '-n' flag, then we can see the line number of the printed lines in their respective files."
+    read_and_exec_command "cat -n example_file1.txt example_file2.txt" "Try it out with example_file1.txt example_file2.txt:"
+    print_and_wait 2 "Amazing! Now you now about cat!"
+    echo
+}
+
 
 
 print_challenge() {
@@ -208,6 +248,8 @@ full_tutorial() {
     cd_tutorial
     ls_tutorial
     flags_tutorial
+    echo_tutorial
+    cat_tutorial
     print_challenge
 } 
 
@@ -218,6 +260,8 @@ key_to_function[0]="pwd_tutorial"
 key_to_function[1]="cd_tutorial"
 key_to_function[2]="ls_tutorial"
 key_to_function[3]="flags_tutorial"
+key_to_function[4]="echo_tutorial"
+key_to_function[5]="cat_tutorial"
 key_to_function[10]="print_challenge"
 
 declare -A command_to_key
@@ -225,6 +269,8 @@ command_to_key["-pwd"]=0
 command_to_key["-cd"]=1
 command_to_key["-ls"]=2
 command_to_key["-flags"]=3
+command_to_key["-echo"]=4
+command_to_key["-cat"]=5
 command_to_key["-challenge"]=10
 
 # Check bash version
@@ -263,11 +309,4 @@ else
         eval "${key_to_function[$key]}"
     done
 fi
-
-
-
-
-# Bash ls command
-# Try ls
-# Bash flags
 
