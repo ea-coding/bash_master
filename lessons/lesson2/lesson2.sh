@@ -61,6 +61,7 @@ welcome_message() {
 }
 
 mkdir_tutorial() {
+    change_to_lesson2_directory
     print_and_wait 2 "We are now going to learn about the mkdir command."
     print_and_wait 2 "mkdir stands for make directory"
     print_and_wait 2 "And as the name suggests, it allows you to make a new directory."
@@ -86,11 +87,34 @@ mkdir_tutorial() {
     print_and_wait 2 "Amazing work!"
     echo
     change_to_lesson2_directory
+    clean_files_and_directories
+}
+
+touch_tutorial() {
+    change_to_lesson2_directory
+    print_and_wait 2 "We will now learn about the 'touch' command."
+    print_and_wait 2 "Similar to the mkdir command, the touch command allows you to create a new file."
+    print_and_wait 2 "We would do so as follows: touch file.txt."
+    read_and_exec_command "cd lesson2_dir" "Change the directory to lesson2_dir:"
+    read_and_exec_command "pwd" "Print the current working directory:"
+    read_and_exec_command "mkdir file_dir" "Now, create a directory called 'file_dir':"
+    read_and_exec_command "ls" "List the contents of the current working directory:"
+    read_and_exec_command "cd file_dir" "Now change the directory to this new directory:"
+    read_and_exec_command "touch file.txt" "Now create a file called 'file.txt':"
+    read_and_exec_command "ls" "List the contents of the current working directory:"
+    print_and_wait 2 "If you want to create multiple files at once, you can just specify multiple filenames after the touch command."
+    read_and_exec_command "touch first_file.txt second_file.txt" "Create two files: first_file.txt and second_file.txt:"
+    read_and_exec_command "ls" "List the contents of the directory:"
+    print_and_wait 2 "Amazing, now we know how the 'touch' command works!"
+    echo
+    change_to_lesson2_directory
+    clean_files_and_directories
 }
 
 full_tutorial() {
     welcome_message
     mkdir_tutorial
+    touch_tutorial
 }
 
 
