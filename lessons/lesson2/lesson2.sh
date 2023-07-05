@@ -46,6 +46,12 @@ clean_files_and_directories() {
     rm -rf lesson2_dir/*
 }
 
+clean_after_func() {
+    echo
+    change_to_lesson2_directory
+    clean_files_and_directories
+}
+
 lesson1_referral() {
     print_and_wait 2 "Hi, welcome to lesson 2!"
     print_and_wait 2 "If you do not know about flags or the pwd, cd, ls, echo and cat commands, check out lesson 1!"
@@ -85,9 +91,7 @@ mkdir_tutorial() {
     read_and_exec_command "pwd" "Print the working directory:"
     read_and_exec_command "ls" "Check the contents of the the directory:"
     print_and_wait 2 "Amazing work!"
-    echo
-    change_to_lesson2_directory
-    clean_files_and_directories
+    clean_after_func
 }
 
 touch_tutorial() {
@@ -106,15 +110,67 @@ touch_tutorial() {
     read_and_exec_command "touch first_file.txt second_file.txt" "Create two files: first_file.txt and second_file.txt:"
     read_and_exec_command "ls" "List the contents of the directory:"
     print_and_wait 2 "Amazing, now we know how the 'touch' command works!"
-    echo
+    clean_after_func
+}
+
+
+rm_tutorial() {
     change_to_lesson2_directory
-    clean_files_and_directories
+    print_and_wait 2 "Let's move on to the next command: the 'rm' command"
+    print_and_wait 2 "rm stands for remove and, surprise, it allows you to remove a file."
+    print_and_wait 2 "You can use rm as follows: 'rm file_name'"
+    print_and_wait 2 "Before we start removing files, let's create some."
+    read_and_exec_command "cd lesson2_dir" "Change the directory to lesson2_dir:"
+    read_and_exec_command "pwd" "Print the working directory:"
+    read_and_exec_command "touch file_to_delete.txt" "Now create a file called file_to_delete.txt:"
+    read_and_exec_command "ls" "List the files in the current directory:"
+    read_and_exec_command "rm file_to_delete.txt" "Now delete the file:"
+    read_and_exec_command "ls" "Now list the files in the current directory again:"
+    print_and_wait 2 "Amazing! Now we know how to delete file... but what about directories?"
+    read_and_exec_command "mkdir delete_dir" "Now create a new directory called delete_dir:"
+    read_and_exec_command "ls" "List the files in the current directory:"
+    read_and_exec_command "rm delete_dir" "Now try removing the directory using rm:"
+    read_and_exec_command "ls" "List the files in the current directory again:"
+    print_and_wait 2 "That's odd. The directory wasn't deleted..."
+    print_and_wait 2 "That's because rm only removes non-directory files."
+    print_and_wait 2 "We can delete directories by adding the -d flag."
+    read_and_exec_command "rm -d delete_dir" "Now try removing the directory using the -d flag:"
+    read_and_exec_command "ls" "Now list the files in the directories again:"
+    print_and_wait 2 "Let's introduce one last flag: the -r flag."
+    print_and_wait 2 "When we add the -r flag, we delete all files and directories inside a given directory."
+    print_and_wait 2 "To see what I mean, let's create a new directory and some files inside that directory."
+    read_and_exec_command "mkdir dir_containing_files" "Make a directory called dir_containing_files:"
+    read_and_exec_command "ls" "Now, list the files in the directory:"
+    read_and_exec_command "cd dir_containing_files" "Change the directory to be dir_containing_files:"
+    read_and_exec_command "ls" "Now, list the files again:"
+    read_and_exec_command "touch file.txt" "Create a file called file.txt:"
+    read_and_exec_command "cd .." "Now change the directory to be the previous directory:"
+    read_and_exec_command "rm dir_containing_files" "Attempt to remove dir_containing_files using rm without any flags:"
+    read_and_exec_command "ls" "List the files in the current working directory:"
+    read_and_exec_command "rm -d dir_containing_files" "Now, attempt to remove dir_containing_files using rm with the -d flag:"
+    read_and_exec_command "ls" "List the files in the current working directory again:"
+    read_and_exec_command "rm -r dir_containing_files" "Now, attempt to remove dir_containing_files using rm with the -r flag:"
+    read_and_exec_command "ls" "Now, list the files in the current working directory again:"
+    print_and_wait 2 "Amazing! We have deleted the directory and all files inside of it!"
+    print_and_wait 2 "Good job! You have learned the rm command!"
+    clean_after_func
+}
+
+print_flag_info() {
+    print_and_wait 2 "If you want to redo some of the sections of this lesson there is an easy way to do this."
+    print_and_wait 2 "Run the lesson2 file again by typing './lesson2.sh' into you terminal and add the appropriate flags."
+    print_and_wait 2 "So, for example, if you want to review the rm command, you can run './lesson2.sh -rm'"
+    print_and_wait 2 "If you want to review multiple commands, for example rm and mkdir you can run './lesson2.sh -rm -mkdir'"
+    print_and_wait 2 "Have fun reviewing!"
+    echo
 }
 
 full_tutorial() {
     welcome_message
     mkdir_tutorial
     touch_tutorial
+    rm_tutorial
+    print_flag_info
 }
 
 
@@ -128,6 +184,7 @@ key_to_function[3]="cp_tutorial"
 key_to_function[4]="mv_tutorial"
 key_to_function[5]="grep_tutorial"
 key_to_function[6]="wc_tutorial"
+key_to_function[7]="print_flag_info"
 key_to_function[10]="print_challenge"
 
 declare -A command_to_key
@@ -138,6 +195,7 @@ command_to_key["-cp"]=3
 command_to_key["-mv"]=4
 command_to_key["-grep"]=5
 command_to_key["-wc"]=6
+command_to_key["-flags"]=7
 command_to_key["-challenge"]=10
 
 # Check bash version
